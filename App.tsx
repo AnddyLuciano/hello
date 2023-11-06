@@ -1,50 +1,112 @@
-import {useState} from 'react';
-import {Button, StyleSheet, Text, View, Animated} from 'react-native';
-
+import {useRef} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  ImageSourcePropType,
+  Dimensions,
+  TouchableOpacity,
+  TextInput,
+  Keyboard,
+  Button,
+} from 'react-native';
+import {Input} from './src/login/components/Input';
+import {faUser} from '@fortawesome/free-solid-svg-icons/faUser';
+import {faLock} from '@fortawesome/free-solid-svg-icons/faLock';
+import {InputButton} from './src/login/components/Button';
 export default function App() {
-  const [number, setNumber] = useState<number>(0);
+  const textInputRef = useRef<TextInput | null>(null);
+
+  const handleBlurTextInput = () => {
+    textInputRef.current?.blur();
+    Keyboard.dismiss();
+  };
+
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.contained}>
-          <Text style={styles.title}>Shopify</Text>
-          <Button title="Se connecter" onPress={() => setNumber(number + 1)} />
+    <TouchableOpacity
+      style={{flex: 1}}
+      onPress={handleBlurTextInput}
+      activeOpacity={1}>
+      <ImageBackground
+        source={require('./src/login/assets/img/background.png')}
+        blurRadius={1}
+        resizeMode="cover"
+        style={styles.background}>
+        <View style={styles.box}>
+          <View>
+            <Text style={styles.title}>Shopi</Text>
+          </View>
+          <View style={styles.form}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: '#606771',
+              }}>
+              Welcome back! 🙂
+            </Text>
+            <Input
+              type="text"
+              icon={faUser}
+              iconColor="#4990E2"
+              placeholder="enter username"
+              inputRef={textInputRef}
+            />
+            <Input
+              type="password"
+              icon={faLock}
+              iconColor="#4990E2"
+              placeholder="enter password"
+              inputRef={textInputRef}
+            />
+            <InputButton label="Login" color="#4990E2" />
+            <Text style={{color: '#8b8f98', textDecorationLine: 'underline'}}>
+              Forgot password?
+            </Text>
+          </View>
         </View>
-        <View style={styles.footer}>
-          <Text>Copyright ©anddy_luciano 2023</Text>
-        </View>
-      </View>
-    </>
+      </ImageBackground>
+    </TouchableOpacity>
   );
 }
 
+const background: ImageSourcePropType = {
+  uri: './src/login/assets/img/background.svg',
+};
+
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#EFEFEF',
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 40,
+  background: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    paddingVertical: 0,
+    paddingHorizontal: 60,
   },
-  contained: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
+  box: {
     flex: 1,
-    borderRadius: 15,
-    position: 'relative',
-  },
-  footer: {
-    height: 60,
-    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    transform: [{translateY: 100}],
+    gap: 40,
   },
   title: {
-    fontSize: 46,
+    fontSize: 32,
     fontWeight: '700',
-    position: 'absolute',
-    top: 10,
-    left: 25,
-    color: '#34518C',
+    color: '#4990E2',
+  },
+  form: {
+    backgroundColor: 'white',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 40,
+    borderRadius: 5,
+    elevation: 3,
+    shadowColor: 'rgba(0,0,0,1)',
   },
 });
